@@ -1,6 +1,6 @@
 ---
 - name: Test direct sur serveur spécifique
-  hosts: 172.30.12.20
+  hosts: 172.30.20.11
   gather_facts: no
   
   vars:
