@@ -1,20 +1,15 @@
 ---
-- name: Test direct sur serveur spécifique
-  hosts: 172.30.20.12
-  gather_facts: no
+- name: Test de connexion Jenkins vers Ansible
+  hosts: all
+  gather_facts: no  # On gagne du temps en ne récupérant pas toutes les infos du serveur
   
-  vars:
-    # Optionnel : spécifie l'utilisateur ici si ce n'est pas le même que ta session locale
-    ansible_user: root 
-
   tasks:
-    - name: Test de "Ping" Ansible
-      ansible.builtin.ping:
+    - name: 1. Afficher un message dans la console Jenkins
+      debug:
+        msg: "Connexion SSH réussie avec le serveur 172.30.20.12 !"
 
-    - name: Vérification de l'espace disque (Action simple)
-      ansible.builtin.command: df -h /
-      register: disk_usage
-
-    - name: Affichage du résultat
-      ansible.builtin.debug:
-        msg: "L'espace disque sur le serveur est : {{ disk_usage.stdout_lines[1] }}"
+    - name: 2. Créer un marqueur sur le serveur distant
+      file:
+        path: /tmp/vu_par_jenkins.txt
+        state: touch
+        mode: '0644'
