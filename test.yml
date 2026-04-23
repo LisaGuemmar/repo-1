@@ -1,0 +1,20 @@
+---
+- name: Test direct sur serveur spécifique
+  hosts: 172.30.12.20
+  gather_facts: no
+  
+  vars:
+    # Optionnel : spécifie l'utilisateur ici si ce n'est pas le même que ta session locale
+    ansible_user: root 
+
+  tasks:
+    - name: Test de "Ping" Ansible
+      ansible.builtin.ping:
+
+    - name: Vérification de l'espace disque (Action simple)
+      ansible.builtin.command: df -h /
+      register: disk_usage
+
+    - name: Affichage du résultat
+      ansible.builtin.debug:
+        msg: "L'espace disque sur le serveur est : {{ disk_usage.stdout_lines[1] }}"
