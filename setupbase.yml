@@ -1,0 +1,28 @@
+---
+- name: Standardisation des accès serveurs
+  hosts: all
+  become: yes
+  # L'option A : On désactive la collecte automatique d'infos (Facts)
+  # Cela évite le crash Python sur les serveurs avec de vieilles versions.
+  gather_facts: no
+
+  tasks:
+    - name: Créer l'utilisateur admina
+      ansible.builtin.user:
+        name: admina
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        state: present
+
+    - name: Configurer sudo sans mot de passe pour admina
+      ansible.builtin.copy:
+        content: "admina ALL=(ALL) NOPASSWD:ALL"
+        dest: /etc/sudoers.d/admina
+        mode: '0440'
+
+    - name: Déployer la clé publique de Jenkins pour admina
+      ansible.builtin.authorized_key:
+        user: admina
+        state: present
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGDR0wHAICYEU23cTobp+P1C2GlmL00h3u0sZZ4R9hhV jenkins@1a4ea8518e4c"
